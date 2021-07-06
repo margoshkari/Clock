@@ -1,4 +1,6 @@
 ﻿
+using System.Drawing;
+
 namespace Clock
 {
     partial class Form1
@@ -33,8 +35,12 @@ namespace Clock
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Text = "Form1";
+
+            clock = new ClockControl(new Size(300, 300), new Point(this.ClientSize.Width / 2 - 300 / 2, this.ClientSize.Height / 2 - 300 / 2), Color.LightGray);
+            this.Controls.Add(clock);
         }
 
+        private ClockControl clock = new ClockControl();
         #endregion
     }
 }
