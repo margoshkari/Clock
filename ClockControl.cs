@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Clock
@@ -45,21 +41,39 @@ namespace Clock
         {
             PaintClock(DateTime.Now);
         }
-        private void PaintClock(DateTime dtArg)
+        private void PaintClock(DateTime date)
         {
             DrawCircle();
-            //PaintArrows(dtArg);
+            DrawArrows(date);
         }
-        
+        private void DrawArrows(DateTime date)
+        {
+            var draw = this.CreateGraphics();
+
+            draw.DrawLine(new Pen(new SolidBrush(Color.Black), 1), new Point((int)(ClientRectangle.Width / 2), (int)(ClientRectangle.Height / 2)),
+               new Point((int)(ClientRectangle.Width / 2 + (Lenght - 2) * Math.Sin(2 * Math.PI / oneMinute * date.Second)), (int)(ClientRectangle.Height / 2 - (Lenght - 2) * Math.Cos(2 * Math.PI / oneMinute * date.Second))));
+
+            draw.DrawLine(new Pen(new SolidBrush(Color.Black), 2), new Point((int)(ClientRectangle.Width / 2), (int)(ClientRectangle.Height / 2)),
+                new Point((int)(ClientRectangle.Width / 2 + (Lenght - 4) * Math.Sin(2 * Math.PI / oneMinute * date.Minute)), (int)(ClientRectangle.Height / 2 - (Lenght - 4) * Math.Cos(2 * Math.PI / oneMinute * date.Minute))));
+            
+            int hour = 0;
+            if (date.Hour <= dayHalf)
+                hour = date.Hour;
+            else
+                hour = date.Hour - dayHalf;
+
+            draw.DrawLine(new Pen(new SolidBrush(Color.Black), 4), new Point((int)(ClientRectangle.Width / 2), (int)(ClientRectangle.Height / 2)),
+                new Point((int)(ClientRectangle.Width / 2 + (Lenght - 10) * Math.Sin(2 * Math.PI / dayHalf * hour + 2 * Math.PI / (dayHalf * oneMinute) * date.Minute)), (int)(ClientRectangle.Height / 2 - (Lenght - 10) * Math.Cos(2 * Math.PI / dayHalf * hour + 2 * Math.PI / (dayHalf * oneMinute) * date.Minute))));
+        }
         private void DrawCircle()
         {
             var draw = this.CreateGraphics();
 
             for (int i = 0; i < dayHalf; i++)
             {
-                draw.FillEllipse(new SolidBrush(Color.Black), new Rectangle(new Point((int)(ClientRectangle.Width / 2 + Lenght * Math.Cos(Math.PI / 6 * i)), 
-                                                                            (int)(ClientRectangle.Height / 2 + Lenght * Math.Sin(Math.PI / 6 * i))),
-                                                                            new Size(10, 10)));
+                draw.FillEllipse(new SolidBrush(Color.Black), new Rectangle(new Point((int)(this.Width / 2 + Lenght * Math.Cos(Math.PI / 6 * i)), 
+                                                                            (int)(this.Height / 2 + Lenght * Math.Sin(Math.PI / 6 * i))),
+                                                                            new Size(7, 7)));
                 if (i == 3)
                 {
                     float x = (float)(ClientRectangle.Width / 2 + Lenght * Math.Cos(Math.PI / 6 * i));
